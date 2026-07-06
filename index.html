@@ -1,1 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ETF 모니터">
+<title>ETF 포트폴리오 모니터</title>
+<link rel="manifest" href="manifest.json">
 
+<style>
+:root {
+  --bg:       #0f1117;
+  --surface:  #1a1d27;
+  --card:     #21253a;
+  --border:   #2d3348;
+  --text:     #e8eaf0;
+  --muted:    #7a8299;
+  --accent:   #6c8efb;
+  --success:  #34d399;
+  --danger:   #f87171;
+  --warning:  #fbbf24;
+  --purple:   #a78bfa;
+  --teal:     #2dd4bf;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Noto Sans KR', sans-serif; min-height: 100vh; padding-bottom: env(safe-area-inset-bottom); }
+
+/* 헤더 */
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 16px 10px; position: sticky; top: 0; z-index: 100; }
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.header h1 { font-size: 16px; font-weight: 700; color: var(--text); }
+.updated { font-size: 10px; color: var(--muted); }
+.refresh-btn { background: var(--card); border: 1px solid var(--border); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; }
+
+/* 탭 */
+.tabs { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { padding: 7px 13px; font-size: 11px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none; color: var(--muted); font-family: inherit; flex-shrink: 0; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* 요약 */
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 14px; }
+.sum-card { background: var(--card); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--border); }
+.sum-label { font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+.sum-val { font-size: 20px; font-weight: 700; }
+.sum-sub { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+/* 섹션 제목 */
+.section-title { font-size: 10px; color: var(--muted); padding: 10px 14px 4px; letter-spacing: .06em; }
+
+/* ETF 카드 */
+.etf-list { padding: 0 14px 20px; display: flex; flex-direction: column; gap: 8px; }
+.etf-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color .2s; }
+.etf-card.ok { border-left: 3px solid var(--success); }
+.etf-card.fail { border-left: 3px solid var(--danger); }
+.etf-card.pending { border-left: 3px solid var(--border); }
+
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 14px 8px; gap: 8px; cursor: pointer; }
+.card-name { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.card-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.tag { font-size: 9px; padding: 2px 7px; border-radius: 5px; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
+.tag-kr  { background: #1a2f4a; color: #6aadff; }
+.tag-us  { background: #1a3a2a; color: #4fd98e; }
+.tag-div { background: #3a2d0a; color: #fbbf24; }
+.tag-cc  { background: #281a4a; color: #a78bfa; }
+.tag-re  { background: #3a1a2a; color: #f472b6; }
+
+/* 지표 그리드 — 5개 */
+.metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); }
+.metric { background: var(--surface); padding: 8px 6px; text-align: center; }
+.metric-label { font-size: 8px; color: var(--muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.metric-val { font-size: 13px; font-weight: 700; }
+.pos { color: var(--danger); }   /* 한국식: 상승=빨강 */
+.neg { color: var(--accent); }   /* 하락=파랑 */
+.flat { color: var(--muted); }
+.warn-val { color: var(--warning); }
+.good-val { color: var(--success); }
+
+/* 신호등 뱃지 */
+.sig { font-size: 8px; padding: 1px 4px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
+.sig-green  { background: #052a14; color: var(--success); }
+.sig-amber  { background: #2a1f05; color: var(--warning); }
+.sig-red    { background: #2a0808; color: var(--danger); }
+
+/* 확장 상세 */
+.card-detail { display: none; padding: 10px 14px 12px; border-top: 1px solid var(--border); }
+.card-detail.open { display: block; }
+.detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.detail-row:last-child { border: none; }
+.detail-label { color: var(--muted); }
+.detail-val { font-weight: 600; }
+
+/* 로딩 */
+.loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+.spinner { font-size: 32px; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 에러 배너 */
+.error-banner { background: #2a0808; border: 1px solid #7f1d1d; color: var(--danger); padding: 10px 14px; font-size: 12px; margin: 10px 14px; border-radius: 8px; display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>📊 ETF 모니터</h1>
+    <button class="refresh-btn" onclick="loadData()">↻ 새로고침</button>
+  </div>
+  <div class="tabs" id="tab-nav"></div>
+</div>
+
+<div id="error-banner" class="error-banner"></div>
+<div id="app-content"><div class="loading"><div class="spinner">⏳</div><br>데이터 로딩 중...</div></div>
+
+<script>
+const ETF_META = {
+  e01:{cat:"us", tag:"🇺🇸 미국 성장", tc:"tag-us"},
+  e02:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e03:{cat:"us", tag:"🇺🇸 미국 성장", tc:"tag-us"},
+  e04:{cat:"div",tag:"💰 배당/인컴",  tc:"tag-div"},
+  e05:{cat:"div",tag:"💰 배당/인컴",  tc:"tag-div"},
+  e06:{cat:"re", tag:"🏢 리츠",       tc:"tag-re"},
+  e07:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e08:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e09:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e10:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e11:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e12:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e13:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e14:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e15:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e16:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+};
+
+const TABS = [
+  {id:"all",label:"전체"},
+  {id:"kr", label:"🇰🇷 국내"},
+  {id:"us", label:"🇺🇸 미국"},
+  {id:"div",label:"💰 배당"},
+  {id:"cc", label:"🛡️ 커버드콜"},
+  {id:"re", label:"🏢 리츠"},
+];
+
+const CAT_LABELS = {kr:"🇰🇷 국내 성장", us:"🇺🇸 미국 성장", div:"💰 배당/인컴", cc:"🛡️ 커버드콜", re:"🏢 리츠"};
+
+let allData = [];
+let activeTab = "all";
+let openCards = new Set();
+
+// ── 신호등 ──
+function perSignal(v){
+  if(!v) return "";
+  const n = parseFloat(v);
+  if(isNaN(n)||n<=0) return `<span class="sig sig-amber">적자</span>`;
+  if(n<20) return `<span class="sig sig-green">저평가</span>`;
+  if(n<40) return `<span class="sig sig-amber">적정</span>`;
+  return `<span class="sig sig-red">고평가</span>`;
+}
+function pbrSignal(v){
+  if(!v) return "";
+  const n = parseFloat(v);
+  if(isNaN(n)) return "";
+  if(n<1) return `<span class="sig sig-green">저평가</span>`;
+  if(n<3) return `<span class="sig sig-amber">적정</span>`;
+  return `<span class="sig sig-red">고평가</span>`;
+}
+function chgClass(v, dir){
+  if(!v) return "flat";
+  if(dir==="up") return "pos";
+  if(dir==="dn") return "neg";
+  const n = parseFloat(v);
+  return n>0?"pos":n<0?"neg":"flat";
+}
+function perClass(v){
+  const n = parseFloat(v);
+  if(!v||isNaN(n)||n<=0) return "flat";
+  if(n<20) return "good-val";
+  if(n<40) return "warn-val";
+  return "pos";
+}
+function pbrClass(v){
+  const n = parseFloat(v);
+  if(!v||isNaN(n)) return "flat";
+  if(n<1) return "good-val";
+  if(n<3) return "warn-val";
+  return "pos";
+}
+
+function fmt(v){ return v ? Number(v).toLocaleString("ko-KR") : "—"; }
+function fmtX(v){ return v ? parseFloat(v).toFixed(1)+"x" : "—"; }
+
+// ── 카드 렌더 ──
+function cardHTML(e){
+  const m = ETF_META[e.id] || {cat:"kr",tag:"",tc:""};
+  const isOpen = openCards.has(e.id);
+  const statusClass = e.fetch_ok ? "ok" : (e.price ? "pending" : "fail");
+  const chgDisplay = e.chg ? (e.chg_dir==="up"?"+":"")+e.chg+"%" : "—";
+
+  return `
+<div class="etf-card ${statusClass}" id="card-${e.id}">
+  <div class="card-head" onclick="toggleCard('${e.id}')">
+    <div style="min-width:0">
+      <div class="card-name">${e.name}</div>
+      <div class="card-meta">${e.code} · ${e.dist||""}배당</div>
+    </div>
+    <span class="tag ${m.tc}">${m.tag}</span>
+  </div>
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">현재가</div>
+      <div class="metric-val" style="font-size:11px">${e.price ? fmt(e.price)+"원" : "—"}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">주간 등락</div>
+      <div class="metric-val ${chgClass(e.chg, e.chg_dir)}">${chgDisplay}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">분배금</div>
+      <div class="metric-val" style="font-size:11px">${e.dist ? e.dist+"원" : "—"}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">PER${perSignal(e.per)}</div>
+      <div class="metric-val ${perClass(e.per)}">${fmtX(e.per)}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">PBR${pbrSignal(e.pbr)}</div>
+      <div class="metric-val ${pbrClass(e.pbr)}">${fmtX(e.pbr)}</div>
+    </div>
+  </div>
+  <div class="card-detail ${isOpen?"open":""}">
+    <div class="detail-row"><span class="detail-label">NAV</span><span class="detail-val">${fmt(e.nav)}원</span></div>
+    <div class="detail-row"><span class="detail-label">순자산(AUM)</span><span class="detail-val">${fmt(e.aum)}억원</span></div>
+    <div class="detail-row"><span class="detail-label">52주 최고</span><span class="detail-val">${fmt(e.w52_high)}원</span></div>
+    <div class="detail-row"><span class="detail-label">52주 최저</span><span class="detail-val">${fmt(e.w52_low)}원</span></div>
+    <div class="detail-row"><span class="detail-label">마지막 갱신</span><span class="detail-val">${e.updated||"—"}</span></div>
+  </div>
+</div>`;
+}
+
+// ── 요약 ──
+function summaryHTML(etfs){
+  const up = etfs.filter(e=>e.chg_dir==="up").length;
+  const dn = etfs.filter(e=>e.chg_dir==="dn").length;
+  const ok = etfs.filter(e=>e.fetch_ok).length;
+  const monthly = etfs.filter(e=>e.dist_type==="월"||e.dist==="월").length;
+  return `
+<div class="summary">
+  <div class="sum-card">
+    <div class="sum-label">모니터링</div>
+    <div class="sum-val" style="color:var(--accent)">${etfs.length}</div>
+    <div class="sum-sub">수집성공 ${ok}개</div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-label">상승/하락</div>
+    <div class="sum-val"><span style="color:var(--danger)">▲${up}</span> <span style="color:var(--accent)">▼${dn}</span></div>
+    <div class="sum-sub">보합 ${etfs.length-up-dn}개</div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-label">마지막 갱신</div>
+    <div class="sum-val" style="font-size:13px;color:var(--success)">${allData.updated ? allData.updated.slice(5,16) : "—"}</div>
+    <div class="sum-sub">매주 월요일 자동</div>
+  </div>
+</div>`;
+}
+
+// ── 탭 렌더 ──
+function renderTab(){
+  document.getElementById("tab-nav").innerHTML = TABS.map(t=>
+    `<button class="tab${activeTab===t.id?" active":""}" onclick="switchTab('${t.id}')">${t.label}</button>`
+  ).join("");
+
+  const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>(ETF_META[e.id]||{}).cat===activeTab);
+
+  let html = summaryHTML(etfs);
+
+  if(activeTab==="all"){
+    ["kr","us","div","cc","re"].forEach(cat=>{
+      const group = etfs.filter(e=>(ETF_META[e.id]||{}).cat===cat);
+      if(!group.length) return;
+      html += `<div class="section-title">${CAT_LABELS[cat]}</div><div class="etf-list">${group.map(cardHTML).join("")}</div>`;
+    });
+  } else {
+    html += `<div class="etf-list">${etfs.map(cardHTML).join("")}</div>`;
+  }
+
+  document.getElementById("app-content").innerHTML = html;
+}
+
+function switchTab(id){ activeTab=id; renderTab(); }
+function toggleCard(id){ openCards.has(id)?openCards.delete(id):openCards.add(id); renderTab(); }
+
+// ── 데이터 로드 ──
+async function loadData(){
+  document.getElementById("app-content").innerHTML =
+    `<div class="loading"><div class="spinner">⏳</div><br>데이터 로딩 중...</div>`;
+  document.getElementById("error-banner").style.display = "none";
+
+  try {
+    // data/etf_data.json 을 GitHub Pages에서 가져옴
+    const res = await fetch("data/etf_data.json?t="+Date.now());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    allData = await res.json();
+    renderTab();
+  } catch(e) {
+    // 개발 중이거나 파일 없을 때 — 빈 데이터로 표시
+    console.warn("데이터 로드 실패:", e.message);
+    allData = {
+      updated: "—",
+      etfs: [
+        {id:"e01",code:"314250",name:"KODEX 미국빅테크10(H)",   dist:"월",   fetch_ok:false},
+        {id:"e02",code:"396500",name:"TIGER 반도체TOP10",        dist:"분기", fetch_ok:false},
+        {id:"e03",code:"0173Y0",name:"KODEX 미국AI광통신네트워크",dist:"월",  fetch_ok:false},
+        {id:"e04",code:"458730",name:"TIGER 미국배당다우존스",    dist:"월",   fetch_ok:false},
+        {id:"e05",code:"441640",name:"KODEX 미국배당커버드콜액티브",dist:"월",fetch_ok:false},
+        {id:"e06",code:"395400",name:"KODEX 한국부동산리츠인프라",dist:"월",  fetch_ok:false},
+        {id:"e07",code:"494300",name:"KODEX 나스닥100데일리커버드콜OTM",dist:"월",fetch_ok:false},
+        {id:"e08",code:"498410",name:"KODEX 금융고배당TOP10위클리커버드콜",dist:"주간",fetch_ok:false},
+        {id:"e09",code:"0167A0",name:"SOL AI반도체TOP2플러스",   dist:"분기", fetch_ok:false},
+        {id:"e10",code:"0190C0",name:"RISE 현대차고정피지컬AI",  dist:"분기", fetch_ok:false},
+        {id:"e11",code:"489030",name:"PLUS 고배당주위클리커버드콜",dist:"주간",fetch_ok:false},
+        {id:"e12",code:"483570",name:"KODEX 방산TOP10",          dist:"분기", fetch_ok:false},
+        {id:"e13",code:"0190D0",name:"RISE AI전력인프라",         dist:"분기", fetch_ok:false},
+        {id:"e14",code:"491290",name:"KODEX 조선TOP10",           dist:"분기", fetch_ok:false},
+        {id:"e15",code:"305720",name:"KODEX 2차전지산업",          dist:"분기", fetch_ok:false},
+        {id:"e16",code:"483280",name:"KODEX 미국AI테크TOP10타겟커버드콜",dist:"월",fetch_ok:false},
+      ]
+    };
+    const banner = document.getElementById("error-banner");
+    banner.style.display = "block";
+    banner.textContent = "⚠ 데이터 파일을 찾을 수 없습니다. GitHub Actions를 먼저 실행해 주세요.";
+    renderTab();
+  }
+}
+
+// 앱 초기화
+loadData();
+</script>
+</body>
+</html>
