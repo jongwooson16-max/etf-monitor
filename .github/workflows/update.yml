@@ -1,0 +1,55 @@
+# .github/workflows/update.yml
+# 매주 월요일 오전 8시(KST) 자동 실행
+# 수동 실행: Actions 탭 → Run workflow
+ 
+name: ETF 데이터 자동 업데이트
+ 
+on:
+  schedule:
+    # cron은 UTC 기준 — KST 08:00 = UTC 23:00 (전날)
+    - cron: "0 23 * * 0"   # 매주 일요일 23:00 UTC = 월요일 08:00 KST
+ 
+  workflow_dispatch:        # 수동 실행 버튼 활성화
+ 
+jobs:
+  crawl-and-deploy:
+    runs-on: ubuntu-latest
+ 
+    permissions:
+      contents: write       # 파일 커밋 권한
+ 
+    steps:
+      # 1. 코드 체크아웃
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+ 
+      # 2. 파이썬 설치
+      - name: Python 3.11 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+ 
+      # 3. 의존성 설치 (표준 라이브러리만 사용하므로 별도 패키지 없음)
+      - name: 의존성 확인
+        run: python --version
+ 
+      # 4. 크롤링 실행
+      - name: 네이버금융 ETF 데이터 수집
+        run: python crawl.py
+ 
+      # 5. 결과 파일 커밋 & 푸시
+      - name: 데이터 파일 저장
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/etf_data.json
+          git diff --staged --quiet || git commit -m "📊 ETF 데이터 자동 업데이트 $(date +'%Y-%m-%d %H:%M KST' -d '+9 hours')"
+          git push
+ 
+      # 6. 완료 알림 (선택 — 슬랙·텔레그램 연동 시 활성화)
+      # - name: 카카오/텔레그램 알림
+      #   run: |
+      #     curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+      #       -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+      #       -d "text=📊 ETF 주간 리포트 업데이트 완료! https://YOUR_ID.github.io/etf-monitor"
+ 
