@@ -24,7 +24,7 @@ jobs:
       - name: Python 설치
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: ETF 데이터 수집
         run: python crawl.py
