@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06 20:21 KST",
+  "updated": "2026-07-07 18:56 KST",
   "total": 16,
   "success": 14,
   "etfs": [
@@ -9,7 +9,7 @@
       "name": "KODEX 미국빅테크10(H)",
       "cat": "us",
       "dist": "",
-      "price": "57865",
+      "price": "57810",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -18,7 +18,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -27,7 +27,7 @@
       "name": "TIGER 반도체TOP10",
       "cat": "kr",
       "dist": "",
-      "price": "44500",
+      "price": "41375",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -36,7 +36,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -45,7 +45,7 @@
       "name": "KODEX 미국AI광통신네트워크",
       "cat": "us",
       "dist": "",
-      "price": "13170",
+      "price": "12650",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -54,7 +54,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -63,7 +63,7 @@
       "name": "TIGER 미국배당다우존스",
       "cat": "div",
       "dist": "",
-      "price": "15740",
+      "price": "15710",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -72,7 +72,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -81,7 +81,7 @@
       "name": "KODEX 미국배당커버드콜액티브",
       "cat": "div",
       "dist": "",
-      "price": "13735",
+      "price": "13675",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -90,7 +90,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -99,7 +99,7 @@
       "name": "KODEX 한국부동산리츠인프라",
       "cat": "re",
       "dist": "",
-      "price": "5890",
+      "price": "5920",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -108,7 +108,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -117,7 +117,7 @@
       "name": "KODEX 나스닥100데일리커버드콜OTM",
       "cat": "cc",
       "dist": "",
-      "price": "10590",
+      "price": "10480",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -126,7 +126,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -135,7 +135,7 @@
       "name": "KODEX 금융고배당TOP10위클리커버드콜",
       "cat": "cc",
       "dist": "",
-      "price": "12050",
+      "price": "12125",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -144,7 +144,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -153,7 +153,7 @@
       "name": "SOL AI반도체TOP2플러스",
       "cat": "kr",
       "dist": "",
-      "price": "23375",
+      "price": "21470",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -162,7 +162,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -171,7 +171,7 @@
       "name": "RISE 현대차고정피지컬AI",
       "cat": "kr",
       "dist": "",
-      "price": "9865",
+      "price": "9465",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -180,7 +180,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -189,7 +189,7 @@
       "name": "PLUS 고배당주위클리커버드콜",
       "cat": "cc",
       "dist": "",
-      "price": "6460",
+      "price": "6565",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -198,7 +198,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -207,7 +207,7 @@
       "name": "KODEX 방산TOP10",
       "cat": "kr",
       "dist": "",
-      "price": "16585",
+      "price": "16455",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -216,7 +216,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -234,7 +234,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": false
     },
     {
@@ -252,7 +252,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": false
     },
     {
@@ -261,7 +261,7 @@
       "name": "KODEX 2차전지산업",
       "cat": "kr",
       "dist": "",
-      "price": "14105",
+      "price": "13595",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -270,7 +270,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     },
     {
@@ -279,7 +279,7 @@
       "name": "KODEX 미국AI테크TOP10타겟커버드콜",
       "cat": "cc",
       "dist": "",
-      "price": "12670",
+      "price": "12720",
       "chg": "",
       "chg_dir": "flat",
       "nav": "",
@@ -288,7 +288,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-06 20:21 KST",
+      "updated": "2026-07-07 18:56 KST",
       "fetch_ok": true
     }
   ]
