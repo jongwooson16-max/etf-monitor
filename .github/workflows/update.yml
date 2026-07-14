@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/etf_data.json
+          git add data/etf_data.json data/history.json
           git diff --staged --quiet || git commit -m "📊 ETF 자동 업데이트"
           git push
 
