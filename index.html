@@ -237,8 +237,8 @@ function cardHTML(e){
       <div class="metric-val ${chgClass(e.chg, e.chg_dir)}">${chgDisplay}</div>
     </div>
     <div class="metric">
-      <div class="metric-label">분배금</div>
-      <div class="metric-val" style="font-size:11px">${e.dist ? e.dist+"원" : "—"}</div>
+      <div class="metric-label">분배금(추정)</div>
+      <div class="metric-val" style="font-size:11px">${e.dist_est ? "~"+fmt(e.dist_est)+"원" : "—"}</div>
     </div>
     <div class="metric">
       <div class="metric-label">PER${perSignal(e.per)}</div>
@@ -252,6 +252,7 @@ function cardHTML(e){
   <div class="card-detail ${isOpen?"open":""}">
     <div class="detail-row"><span class="detail-label">NAV</span><span class="detail-val">${fmt(e.nav)}원</span></div>
     <div class="detail-row"><span class="detail-label">순자산(AUM)</span><span class="detail-val">${fmt(e.aum)}억원</span></div>
+    <div class="detail-row"><span class="detail-label">배당수익률(연)</span><span class="detail-val">${e.div_yield ? e.div_yield+"%" : "—"}</span></div>
     <div class="detail-row"><span class="detail-label">52주 최고</span><span class="detail-val">${fmt(e.w52_high)}원</span></div>
     <div class="detail-row"><span class="detail-label">52주 최저</span><span class="detail-val">${fmt(e.w52_low)}원</span></div>
     ${trendHTML(e.id)}
