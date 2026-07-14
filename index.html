@@ -130,10 +130,12 @@ const ETF_META = {
   e10:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
   e11:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
   e12:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e13:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
   e14:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
   e15:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
   e16:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e17:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
+  e18:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e19:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
 };
 
 const TABS = [
@@ -148,8 +150,24 @@ const TABS = [
 const CAT_LABELS = {kr:"🇰🇷 국내 성장", us:"🇺🇸 미국 성장", div:"💰 배당/인컴", cc:"🛡️ 커버드콜", re:"🏢 리츠"};
 
 let allData = [];
+let allHistory = {series:{}};
 let activeTab = "all";
 let openCards = new Set();
+
+// ── 누적 추이 (히스토리) ──
+function trendHTML(id){
+  const arr = (allHistory.series && allHistory.series[id]) || [];
+  if(arr.length < 2) return `<div class="detail-row"><span class="detail-label">최근 추이</span><span class="detail-val">데이터 누적 중</span></div>`;
+  const last = arr[arr.length-1];
+  const refIdx = Math.max(0, arr.length-6); // 최근 5거래일 전(가능한 범위 내)
+  const ref = arr[refIdx];
+  const lastP = parseFloat(last.p), refP = parseFloat(ref.p);
+  if(!lastP || !refP) return "";
+  const diffPct = ((lastP-refP)/refP*100);
+  const cls = diffPct>0?"pos":diffPct<0?"neg":"flat";
+  const sign = diffPct>0?"+":"";
+  return `<div class="detail-row"><span class="detail-label">${ref.d} 대비</span><span class="detail-val ${cls}">${sign}${diffPct.toFixed(2)}% (${arr.length}일 누적)</span></div>`;
+}
 
 // ── 신호등 ──
 function perSignal(v){
@@ -236,6 +254,7 @@ function cardHTML(e){
     <div class="detail-row"><span class="detail-label">순자산(AUM)</span><span class="detail-val">${fmt(e.aum)}억원</span></div>
     <div class="detail-row"><span class="detail-label">52주 최고</span><span class="detail-val">${fmt(e.w52_high)}원</span></div>
     <div class="detail-row"><span class="detail-label">52주 최저</span><span class="detail-val">${fmt(e.w52_low)}원</span></div>
+    ${trendHTML(e.id)}
     <div class="detail-row"><span class="detail-label">마지막 갱신</span><span class="detail-val">${e.updated||"—"}</span></div>
   </div>
 </div>`;
@@ -262,7 +281,7 @@ function summaryHTML(etfs){
   <div class="sum-card">
     <div class="sum-label">마지막 갱신</div>
     <div class="sum-val" style="font-size:13px;color:var(--success)">${allData.updated ? allData.updated.slice(5,16) : "—"}</div>
-    <div class="sum-sub">매주 월요일 자동</div>
+    <div class="sum-sub">평일 16:00 자동</div>
   </div>
 </div>`;
 }
@@ -304,6 +323,13 @@ async function loadData(){
     const res = await fetch("data/etf_data.json?t="+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     allData = await res.json();
+
+    // 누적 히스토리(있으면 로드, 없어도 무시)
+    try {
+      const hres = await fetch("data/history.json?t="+Date.now());
+      if(hres.ok) allHistory = await hres.json();
+    } catch(_) { /* history 없어도 정상 동작 */ }
+
     renderTab();
   } catch(e) {
     // 개발 중이거나 파일 없을 때 — 빈 데이터로 표시
@@ -323,10 +349,12 @@ async function loadData(){
         {id:"e10",code:"0190C0",name:"RISE 현대차고정피지컬AI",  dist:"분기", fetch_ok:false},
         {id:"e11",code:"489030",name:"PLUS 고배당주위클리커버드콜",dist:"주간",fetch_ok:false},
         {id:"e12",code:"483570",name:"KODEX 방산TOP10",          dist:"분기", fetch_ok:false},
-        {id:"e13",code:"0190D0",name:"RISE AI전력인프라",         dist:"분기", fetch_ok:false},
-        {id:"e14",code:"491290",name:"KODEX 조선TOP10",           dist:"분기", fetch_ok:false},
+        {id:"e14",code:"0115D0",name:"KODEX 조선TOP10",           dist:"분기", fetch_ok:false},
         {id:"e15",code:"305720",name:"KODEX 2차전지산업",          dist:"분기", fetch_ok:false},
         {id:"e16",code:"483280",name:"KODEX 미국AI테크TOP10타겟커버드콜",dist:"월",fetch_ok:false},
+        {id:"e17",code:"069500",name:"KODEX 200",                 dist:"분기", fetch_ok:false},
+        {id:"e18",code:"0219E0",name:"KODEX 200커버드콜액티브",     dist:"월",  fetch_ok:false},
+        {id:"e19",code:"498400",name:"KODEX 200타겟위클리커버드콜", dist:"월",  fetch_ok:false},
       ]
     };
     const banner = document.getElementById("error-banner");
