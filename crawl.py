@@ -91,7 +91,56 @@ def fetch_etf_list_api() -> dict:
             "volume": str(it.get("quant", "") or ""),
         }
     return out
- 
+
+def fetch_dividend_info(code: str) -> dict:
+    """
+    네이버 모바일 주식 API에서 배당수익률·최근 배당금(연환산)을 수집.
+    m.stock.naver.com/api/stock/{code}/integration 은 인증 없이 접근 가능하며
+    totalInfos 배열에 dividendYieldRatio(배당수익률 %), dividend(주당배당금 연환산)가 들어있음.
+    이 값을 분배주기(월/분기/주간)로 나눠 회당 분배금을 추정하는 데 사용.
+    """
+    url = f"https://m.stock.naver.com/api/stock/{code}/integration"
+    result = {}
+    try:
+        req = Request(url, headers=NAVER_HEADERS)
+        with urlopen(req, timeout=10) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+        data = json.loads(raw)
+    except (URLError, json.JSONDecodeError, ValueError) as e:
+        print(f"    [배당정보 오류] {code}: {e}")
+        return result
+
+    for row in data.get("totalInfos", []) or []:
+        key = row.get("key")
+        val = row.get("value")
+        if val in (None, "", "-"):
+            continue
+        if key == "dividendYieldRatio":
+            result["div_yield"] = str(val).replace("%", "").strip()
+        elif key == "dividend":
+            result["dividend_annual"] = str(val).replace(",", "").strip()
+
+    return result
+
+
+FREQ_PER_YEAR = {"월": 12, "월말": 12, "분기": 4, "주간": 52}
+
+
+def estimate_distribution(price: str, div_yield: str, dividend_annual: str, freq_label: str) -> str:
+    """
+    회당(월/분기/주간) 분배금 추정치 계산.
+    1순위: 네이버가 제공하는 연간 배당금(dividend_annual)을 분배주기로 나눔 (더 정확)
+    2순위: 배당수익률(%) x 현재가 / 분배주기 로 역산
+    """
+    n = FREQ_PER_YEAR.get(freq_label, 12)
+    try:
+        if dividend_annual:
+            return str(round(float(dividend_annual) / n))
+        if div_yield and price:
+            return str(round(float(price) * float(div_yield) / 100 / n))
+    except (ValueError, ZeroDivisionError):
+        pass
+    return ""
  
 def fetch_naver_w52(code: str) -> dict:
     """네이버금융 개별 종목 페이지에서 52주 최고/최저만 보조 수집 (실패해도 무방)"""
@@ -185,23 +234,20 @@ def main():
         fetched = dict(api_map.get(code, {}))
  
         # API에 없거나 가격이 비어있으면 개별 페이지에서 폴백 시도
-        if not fetched.get("price"):
-            fallback = fetch_naver_w52(code)
-            if fallback.get("price_fallback"):
-                fetched["price"] = fallback["price_fallback"]
-            fetched.setdefault("w52_high", fallback.get("w52_high", ""))
-            fetched.setdefault("w52_low", fallback.get("w52_low", ""))
-        else:
-            # 가격은 이미 확보됐으니 52주 고저만 보조 수집
-            fallback = fetch_naver_w52(code)
-            fetched["w52_high"] = fallback.get("w52_high", "")
-            fetched["w52_low"] = fallback.get("w52_low", "")
- 
         if fetched.get("price"):
             print(f"    현재가: {fetched['price']}원  NAV: {fetched.get('nav','?')}  등락: {fetched.get('chg','?')}%")
         else:
             print(f"    ⚠ 가격 수집 실패 — 이전 값 유지")
- 
+
+        # 배당수익률 · 연환산 배당금 수집 (분배금 추정용)
+        div_info = fetch_dividend_info(code)
+        div_yield = div_info.get("div_yield") or prev.get("div_yield", "")
+        dividend_annual = div_info.get("dividend_annual") or prev.get("dividend_annual", "")
+        price_for_calc = fetched.get("price") or prev.get("price", "")
+        dist_est = estimate_distribution(price_for_calc, div_yield, dividend_annual, etf["dist"])
+        if div_info.get("div_yield"):
+            print(f"    배당수익률: {div_yield}%  회당추정분배금: {dist_est}원")
+
         entry = {
             **etf,
             # 자동 수집값 (새 값 우선, 실패시 이전값 유지)
@@ -212,8 +258,11 @@ def main():
             "aum":      fetched.get("aum")       or prev.get("aum", ""),
             "w52_high": fetched.get("w52_high")  or prev.get("w52_high", ""),
             "w52_low":  fetched.get("w52_low")   or prev.get("w52_low", ""),
-            # 수동 입력값 — 크롤링으로 덮어쓰지 않음
-            "dist":     fetched.get("dist")      or prev.get("dist", ""),
+            # 배당/분배금 — dist(분배주기 라벨: 월/분기/주간)는 ETF_LIST 값 그대로 유지(수정 전에는
+            # 여기서 빈 문자열로 덮어써지는 버그가 있어 분배금이 항상 "—"로 표시되고 있었음)
+            "div_yield":       div_yield,
+            "dividend_annual": dividend_annual,
+            "dist_est":        dist_est,   # 회당 추정 분배금(원) — 실제 공시값이 아닌 추정치
             "per":      prev.get("per", ""),   # 수동 보존
             "pbr":      prev.get("pbr", ""),   # 수동 보존
             # 메타
@@ -221,7 +270,7 @@ def main():
             "fetch_ok": bool(fetched.get("price")),
         }
         results.append(entry)
- 
+
         time.sleep(0.5)   # 네이버 서버 부하 방지
  
     # 저장
