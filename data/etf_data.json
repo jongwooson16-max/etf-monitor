@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14 18:35 KST",
+  "updated": "2026-07-14 18:52 KST",
   "total": 18,
   "success": 18,
   "etfs": [
@@ -18,7 +18,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -36,7 +36,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -54,7 +54,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -72,7 +72,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -90,25 +90,25 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
       "id": "e06",
-      "code": "395400",
+      "code": "476800",
       "name": "KODEX 한국부동산리츠인프라",
       "cat": "re",
       "dist": "",
-      "price": "5610",
-      "chg": "",
-      "chg_dir": "flat",
-      "nav": "",
-      "aum": "",
+      "price": "4195",
+      "chg": "-0.94",
+      "chg_dir": "dn",
+      "nav": "4191.0",
+      "aum": "4868",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -126,7 +126,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -144,7 +144,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -162,7 +162,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -180,7 +180,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -198,25 +198,25 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
       "id": "e12",
-      "code": "483570",
+      "code": "0080G0",
       "name": "KODEX 방산TOP10",
       "cat": "kr",
       "dist": "",
-      "price": "16475",
-      "chg": "-0.33",
+      "price": "10015",
+      "chg": "-4.25",
       "chg_dir": "dn",
-      "nav": "16428.0",
-      "aum": "264",
+      "nav": "10015.0",
+      "aum": "3405",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -234,7 +234,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -252,7 +252,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -270,7 +270,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -288,7 +288,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -306,7 +306,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     },
     {
@@ -324,7 +324,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-07-14 18:35 KST",
+      "updated": "2026-07-14 18:52 KST",
       "fetch_ok": true
     }
   ]
