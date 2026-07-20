@@ -101,6 +101,14 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 
 /* 에러 배너 */
 .error-banner { background: #2a0808; border: 1px solid #7f1d1d; color: var(--danger); padding: 10px 14px; font-size: 12px; margin: 10px 14px; border-radius: 8px; display: none; }
+
+/* 내 포트폴리오 */
+.portfolio-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px 14px 4px; }
+.holding-row { display: flex; gap: 8px; padding: 6px 0; }
+.holding-field { flex: 1; }
+.holding-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+.holding-input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 8px; font-size: 12px; font-family: inherit; }
+.holding-input:focus { outline: none; border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -153,6 +161,26 @@ let allData = [];
 let allHistory = {series:{}};
 let activeTab = "all";
 let openCards = new Set();
+
+// ── 내 보유정보 (브라우저 localStorage에 저장, 이 기기에서만 유지) ──
+const HOLD_KEY = "etf_holdings_v1";
+function loadHoldings(){
+  try { return JSON.parse(localStorage.getItem(HOLD_KEY)) || {}; }
+  catch(_) { return {}; }
+}
+function saveHoldings(h){
+  try { localStorage.setItem(HOLD_KEY, JSON.stringify(h)); }
+  catch(_) { /* 저장 실패해도 화면은 정상 동작 */ }
+}
+let holdings = loadHoldings();
+
+function updateHolding(id, field, value){
+  const v = parseFloat(value);
+  if(!holdings[id]) holdings[id] = {qty:0, avg:0};
+  holdings[id][field] = isNaN(v) ? 0 : v;
+  saveHoldings(holdings);
+  renderTab();
+}
 
 // ── 누적 추이 (히스토리) ──
 function trendHTML(id){
@@ -218,12 +246,19 @@ function cardHTML(e){
   const statusClass = e.fetch_ok ? "ok" : (e.price ? "pending" : "fail");
   const chgDisplay = e.chg ? (e.chg_dir==="up"?"+":"")+e.chg+"%" : "—";
 
+  const h = holdings[e.id] || {qty:0, avg:0};
+  const price = parseFloat(e.price) || 0;
+  const value = h.qty * price;
+  const cost = h.qty * (h.avg || 0);
+  const pnl = value - cost;
+  const pnlPct = cost > 0 ? (pnl/cost*100) : 0;
+
   return `
 <div class="etf-card ${statusClass}" id="card-${e.id}">
   <div class="card-head" onclick="toggleCard('${e.id}')">
     <div style="min-width:0">
       <div class="card-name">${e.name}</div>
-      <div class="card-meta">${e.code} · ${e.dist||""}배당</div>
+      <div class="card-meta">${e.code} · ${e.dist||""}배당${h.qty>0?` · <span style="color:var(--accent)">${h.qty}주 보유</span>`:""}</div>
     </div>
     <span class="tag ${m.tc}">${m.tag}</span>
   </div>
@@ -257,6 +292,23 @@ function cardHTML(e){
     <div class="detail-row"><span class="detail-label">52주 최저</span><span class="detail-val">${fmt(e.w52_low)}원</span></div>
     ${trendHTML(e.id)}
     <div class="detail-row"><span class="detail-label">마지막 갱신</span><span class="detail-val">${e.updated||"—"}</span></div>
+    <div class="detail-row" style="border:none;padding-top:10px;flex-direction:column;align-items:stretch;gap:6px">
+      <div class="holding-label">💼 내 보유정보</div>
+      <div class="holding-row">
+        <div class="holding-field">
+          <div class="holding-label">보유수량</div>
+          <input class="holding-input" type="number" min="0" step="1" placeholder="0" value="${h.qty||''}" onclick="event.stopPropagation()" onchange="updateHolding('${e.id}','qty',this.value)">
+        </div>
+        <div class="holding-field">
+          <div class="holding-label">평균매입가(원)</div>
+          <input class="holding-input" type="number" min="0" step="1" placeholder="0" value="${h.avg||''}" onclick="event.stopPropagation()" onchange="updateHolding('${e.id}','avg',this.value)">
+        </div>
+      </div>
+    </div>
+    ${h.qty>0 ? `
+    <div class="detail-row"><span class="detail-label">평가금액</span><span class="detail-val">${fmt(Math.round(value))}원</span></div>
+    <div class="detail-row"><span class="detail-label">평가손익</span><span class="detail-val ${pnl>=0?'pos':'neg'}">${pnl>=0?'+':''}${fmt(Math.round(pnl))}원 (${pnl>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
+    ` : ``}
   </div>
 </div>`;
 }
@@ -287,6 +339,55 @@ function summaryHTML(etfs){
 </div>`;
 }
 
+// ── 내 포트폴리오 전체 요약 (탭과 무관하게 항상 전체 보유종목 기준) ──
+function portfolioSummaryHTML(){
+  let totalValue=0, totalCost=0, totalDayChange=0, count=0;
+
+  (allData.etfs||[]).forEach(e=>{
+    const h = holdings[e.id];
+    if(!h || !h.qty) return;
+    count++;
+    const price = parseFloat(e.price) || 0;
+    const value = h.qty * price;
+    const cost = h.qty * (h.avg || 0);
+    totalValue += value;
+    totalCost += cost;
+    const chgPct = parseFloat(e.chg) || 0;
+    const signedPct = e.chg_dir==="up" ? chgPct : e.chg_dir==="dn" ? -chgPct : 0;
+    totalDayChange += value * signedPct / 100;
+  });
+
+  if(count===0){
+    return `<div class="section-title">💼 내 포트폴리오</div>
+    <div class="portfolio-summary"><div class="sum-card" style="grid-column:1/-1">
+      <div class="sum-sub">각 종목 카드를 눌러 보유수량과 평균매입가를 입력하면 여기에 총 평가금액과 손익이 표시됩니다.</div>
+    </div></div>`;
+  }
+
+  const totalPnl = totalValue - totalCost;
+  const totalPnlPct = totalCost>0 ? (totalPnl/totalCost*100) : 0;
+  const prevValue = totalValue - totalDayChange;
+  const dayPct = prevValue>0 ? (totalDayChange/prevValue*100) : 0;
+
+  return `<div class="section-title">💼 내 포트폴리오 (${count}종목)</div>
+<div class="portfolio-summary">
+  <div class="sum-card">
+    <div class="sum-label">총 평가금액</div>
+    <div class="sum-val" style="font-size:16px">${fmt(Math.round(totalValue))}원</div>
+    <div class="sum-sub">매입원가 ${fmt(Math.round(totalCost))}원</div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-label">평가손익</div>
+    <div class="sum-val ${totalPnl>=0?'pos':'neg'}" style="font-size:16px">${totalPnl>=0?'+':''}${fmt(Math.round(totalPnl))}원</div>
+    <div class="sum-sub ${totalPnl>=0?'pos':'neg'}">${totalPnl>=0?'+':''}${totalPnlPct.toFixed(2)}%</div>
+  </div>
+  <div class="sum-card" style="grid-column:1/-1">
+    <div class="sum-label">오늘 변동</div>
+    <div class="sum-val ${totalDayChange>=0?'pos':'neg'}" style="font-size:16px">${totalDayChange>=0?'+':''}${fmt(Math.round(totalDayChange))}원 (${totalDayChange>=0?'+':''}${dayPct.toFixed(2)}%)</div>
+  </div>
+</div>`;
+}
+
 // ── 탭 렌더 ──
 function renderTab(){
   document.getElementById("tab-nav").innerHTML = TABS.map(t=>
@@ -295,7 +396,7 @@ function renderTab(){
 
   const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>(ETF_META[e.id]||{}).cat===activeTab);
 
-  let html = summaryHTML(etfs);
+  let html = portfolioSummaryHTML() + summaryHTML(etfs);
 
   if(activeTab==="all"){
     ["kr","us","div","cc","re"].forEach(cat=>{
