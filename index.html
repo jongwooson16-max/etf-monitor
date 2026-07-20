@@ -124,13 +124,6 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 <div id="app-content"><div class="loading"><div class="spinner">⏳</div><br>데이터 로딩 중...</div></div>
 
 <script>
-const ETF_META = {
-  e01:{cat:"kr_idx"}, e02:{cat:"kr_idx"}, e03:{cat:"kr_idx"}, e04:{cat:"kr_idx"}, e05:{cat:"kr_idx"},
-  e06:{cat:"kr_div"}, e07:{cat:"kr_div"}, e08:{cat:"kr_div"}, e09:{cat:"kr_div"},
-  e10:{cat:"us_idx"}, e11:{cat:"us_idx"}, e12:{cat:"us_idx"},
-  e13:{cat:"us_div"}, e14:{cat:"us_div"}, e15:{cat:"us_div"}, e16:{cat:"us_div"}, e17:{cat:"us_div"},
-};
-
 const CAT_LABELS = {kr_idx:"🇰🇷 한국지수", kr_div:"🇰🇷 한국배당", us_idx:"🇺🇸 미국지수", us_div:"🇺🇸 미국배당"};
 
 const TABS = [
@@ -173,7 +166,7 @@ function fmt(v){ return (v||v===0) ? Number(v).toLocaleString("ko-KR") : "—"; 
 
 // ── 카드 렌더 ──
 function cardHTML(e){
-  const m = ETF_META[e.id] || {cat:"kr_idx"};
+  const cat = e.cat || "kr_idx";
   const isOpen = openCards.has(e.id);
   const statusClass = e.fetch_ok ? "ok" : (e.price ? "pending" : "fail");
   const chgDisplay = e.chg ? (e.chg_dir==="up"?"+":"")+e.chg+"%" : "—";
@@ -194,7 +187,7 @@ function cardHTML(e){
       <div class="card-name">${e.name}</div>
       <div class="card-meta">${e.code} · ${qty.toLocaleString("ko-KR")}주 보유</div>
     </div>
-    <span class="tag tag-${m.cat}">${CAT_LABELS[m.cat]||""}</span>
+    <span class="tag tag-${cat}">${CAT_LABELS[cat]||""}</span>
   </div>
   <div class="metrics">
     <div class="metric">
@@ -303,13 +296,13 @@ function renderTab(){
     `<button class="tab${activeTab===t.id?" active":""}" onclick="switchTab('${t.id}')">${t.label}</button>`
   ).join("");
 
-  const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>(ETF_META[e.id]||{}).cat===activeTab);
+  const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>e.cat===activeTab);
 
   let html = summaryHTML(etfs);
 
   if(activeTab==="all"){
     ["kr_idx","kr_div","us_idx","us_div"].forEach(cat=>{
-      const group = etfs.filter(e=>(ETF_META[e.id]||{}).cat===cat);
+      const group = etfs.filter(e=>e.cat===cat);
       if(!group.length) return;
       html += `<div class="section-title">${CAT_LABELS[cat]}</div><div class="etf-list">${group.map(cardHTML).join("")}</div>`;
     });
