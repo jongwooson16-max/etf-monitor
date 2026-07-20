@@ -35,6 +35,17 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 .updated { font-size: 10px; color: var(--muted); }
 .refresh-btn { background: var(--card); border: 1px solid var(--border); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; }
 
+/* 최상단 히어로 요약 */
+.hero { margin: 12px 14px 4px; background: linear-gradient(135deg, #232849, #1a1d33); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.hero-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.hero-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.hero-val { font-size: 24px; font-weight: 800; }
+.hero-chg { font-size: 13px; font-weight: 700; text-align: right; }
+.hero-chg-sub { font-size: 10px; color: var(--muted); text-align: right; margin-top: 2px; }
+.hero-div { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.hero-div-label { font-size: 11px; color: var(--muted); }
+.hero-div-val { font-size: 16px; font-weight: 700; color: var(--warning); }
+
 /* 탭 */
 .tabs { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
@@ -63,28 +74,19 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 .card-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
 .tag { font-size: 9px; padding: 2px 7px; border-radius: 5px; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
-.tag-kr  { background: #1a2f4a; color: #6aadff; }
-.tag-us  { background: #1a3a2a; color: #4fd98e; }
-.tag-div { background: #3a2d0a; color: #fbbf24; }
-.tag-cc  { background: #281a4a; color: #a78bfa; }
-.tag-re  { background: #3a1a2a; color: #f472b6; }
+.tag-kr_idx { background: #1a2f4a; color: #6aadff; }
+.tag-us_idx { background: #1a3a2a; color: #4fd98e; }
+.tag-kr_div { background: #3a1a2a; color: #f472b6; }
+.tag-us_div { background: #281a4a; color: #a78bfa; }
 
-/* 지표 그리드 — 5개 */
-.metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); }
+/* 지표 그리드 */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
 .metric { background: var(--surface); padding: 8px 6px; text-align: center; }
 .metric-label { font-size: 8px; color: var(--muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .metric-val { font-size: 13px; font-weight: 700; }
 .pos { color: var(--danger); }   /* 한국식: 상승=빨강 */
 .neg { color: var(--accent); }   /* 하락=파랑 */
 .flat { color: var(--muted); }
-.warn-val { color: var(--warning); }
-.good-val { color: var(--success); }
-
-/* 신호등 뱃지 */
-.sig { font-size: 8px; padding: 1px 4px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
-.sig-green  { background: #052a14; color: var(--success); }
-.sig-amber  { background: #2a1f05; color: var(--warning); }
-.sig-red    { background: #2a0808; color: var(--danger); }
 
 /* 확장 상세 */
 .card-detail { display: none; padding: 10px 14px 12px; border-top: 1px solid var(--border); }
@@ -101,14 +103,6 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 
 /* 에러 배너 */
 .error-banner { background: #2a0808; border: 1px solid #7f1d1d; color: var(--danger); padding: 10px 14px; font-size: 12px; margin: 10px 14px; border-radius: 8px; display: none; }
-
-/* 내 포트폴리오 */
-.portfolio-summary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px 14px 4px; }
-.holding-row { display: flex; gap: 8px; padding: 6px 0; }
-.holding-field { flex: 1; }
-.holding-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
-.holding-input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 8px; font-size: 12px; font-family: inherit; }
-.holding-input:focus { outline: none; border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -118,6 +112,11 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
     <h1>📊 ETF 모니터</h1>
     <button class="refresh-btn" onclick="loadData()">↻ 새로고침</button>
   </div>
+</div>
+
+<div id="hero"></div>
+
+<div class="header" style="position:sticky; top:0; padding-top:6px;">
   <div class="tabs" id="tab-nav"></div>
 </div>
 
@@ -126,68 +125,33 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 
 <script>
 const ETF_META = {
-  e01:{cat:"us", tag:"🇺🇸 미국 성장", tc:"tag-us"},
-  e02:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e03:{cat:"us", tag:"🇺🇸 미국 성장", tc:"tag-us"},
-  e04:{cat:"div",tag:"💰 배당/인컴",  tc:"tag-div"},
-  e05:{cat:"div",tag:"💰 배당/인컴",  tc:"tag-div"},
-  e06:{cat:"re", tag:"🏢 리츠",       tc:"tag-re"},
-  e07:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
-  e08:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
-  e09:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e10:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e11:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
-  e12:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e14:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e15:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e16:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
-  e17:{cat:"kr", tag:"🇰🇷 국내 성장", tc:"tag-kr"},
-  e18:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
-  e19:{cat:"cc", tag:"🛡️ 커버드콜",  tc:"tag-cc"},
+  e01:{cat:"kr_idx"}, e02:{cat:"kr_idx"}, e03:{cat:"kr_idx"}, e04:{cat:"kr_idx"}, e05:{cat:"kr_idx"},
+  e06:{cat:"kr_div"}, e07:{cat:"kr_div"}, e08:{cat:"kr_div"}, e09:{cat:"kr_div"},
+  e10:{cat:"us_idx"}, e11:{cat:"us_idx"}, e12:{cat:"us_idx"},
+  e13:{cat:"us_div"}, e14:{cat:"us_div"}, e15:{cat:"us_div"}, e16:{cat:"us_div"}, e17:{cat:"us_div"},
 };
 
+const CAT_LABELS = {kr_idx:"🇰🇷 한국지수", kr_div:"🇰🇷 한국배당", us_idx:"🇺🇸 미국지수", us_div:"🇺🇸 미국배당"};
+
 const TABS = [
-  {id:"all",label:"전체"},
-  {id:"kr", label:"🇰🇷 국내"},
-  {id:"us", label:"🇺🇸 미국"},
-  {id:"div",label:"💰 배당"},
-  {id:"cc", label:"🛡️ 커버드콜"},
-  {id:"re", label:"🏢 리츠"},
+  {id:"all",    label:"전체"},
+  {id:"kr_idx", label:"🇰🇷 한국지수"},
+  {id:"kr_div", label:"🇰🇷 한국배당"},
+  {id:"us_idx", label:"🇺🇸 미국지수"},
+  {id:"us_div", label:"🇺🇸 미국배당"},
 ];
 
-const CAT_LABELS = {kr:"🇰🇷 국내 성장", us:"🇺🇸 미국 성장", div:"💰 배당/인컴", cc:"🛡️ 커버드콜", re:"🏢 리츠"};
-
-let allData = [];
+let allData = { etfs: [] };
 let allHistory = {series:{}};
 let activeTab = "all";
 let openCards = new Set();
 
-// ── 내 보유정보 (브라우저 localStorage에 저장, 이 기기에서만 유지) ──
-const HOLD_KEY = "etf_holdings_v1";
-function loadHoldings(){
-  try { return JSON.parse(localStorage.getItem(HOLD_KEY)) || {}; }
-  catch(_) { return {}; }
-}
-function saveHoldings(h){
-  try { localStorage.setItem(HOLD_KEY, JSON.stringify(h)); }
-  catch(_) { /* 저장 실패해도 화면은 정상 동작 */ }
-}
-let holdings = loadHoldings();
-
-function updateHolding(id, field, value){
-  const v = parseFloat(value);
-  if(!holdings[id]) holdings[id] = {qty:0, avg:0};
-  holdings[id][field] = isNaN(v) ? 0 : v;
-  saveHoldings(holdings);
-  renderTab();
-}
-
-// ── 누적 추이 (히스토리) ──
+// ── 누적 추이 ──
 function trendHTML(id){
   const arr = (allHistory.series && allHistory.series[id]) || [];
   if(arr.length < 2) return `<div class="detail-row"><span class="detail-label">최근 추이</span><span class="detail-val">데이터 누적 중</span></div>`;
   const last = arr[arr.length-1];
-  const refIdx = Math.max(0, arr.length-6); // 최근 5거래일 전(가능한 범위 내)
+  const refIdx = Math.max(0, arr.length-6);
   const ref = arr[refIdx];
   const lastP = parseFloat(last.p), refP = parseFloat(ref.p);
   if(!lastP || !refP) return "";
@@ -197,23 +161,6 @@ function trendHTML(id){
   return `<div class="detail-row"><span class="detail-label">${ref.d} 대비</span><span class="detail-val ${cls}">${sign}${diffPct.toFixed(2)}% (${arr.length}일 누적)</span></div>`;
 }
 
-// ── 신호등 ──
-function perSignal(v){
-  if(!v) return "";
-  const n = parseFloat(v);
-  if(isNaN(n)||n<=0) return `<span class="sig sig-amber">적자</span>`;
-  if(n<20) return `<span class="sig sig-green">저평가</span>`;
-  if(n<40) return `<span class="sig sig-amber">적정</span>`;
-  return `<span class="sig sig-red">고평가</span>`;
-}
-function pbrSignal(v){
-  if(!v) return "";
-  const n = parseFloat(v);
-  if(isNaN(n)) return "";
-  if(n<1) return `<span class="sig sig-green">저평가</span>`;
-  if(n<3) return `<span class="sig sig-amber">적정</span>`;
-  return `<span class="sig sig-red">고평가</span>`;
-}
 function chgClass(v, dir){
   if(!v) return "flat";
   if(dir==="up") return "pos";
@@ -221,46 +168,33 @@ function chgClass(v, dir){
   const n = parseFloat(v);
   return n>0?"pos":n<0?"neg":"flat";
 }
-function perClass(v){
-  const n = parseFloat(v);
-  if(!v||isNaN(n)||n<=0) return "flat";
-  if(n<20) return "good-val";
-  if(n<40) return "warn-val";
-  return "pos";
-}
-function pbrClass(v){
-  const n = parseFloat(v);
-  if(!v||isNaN(n)) return "flat";
-  if(n<1) return "good-val";
-  if(n<3) return "warn-val";
-  return "pos";
-}
 
-function fmt(v){ return v ? Number(v).toLocaleString("ko-KR") : "—"; }
-function fmtX(v){ return v ? parseFloat(v).toFixed(1)+"x" : "—"; }
+function fmt(v){ return (v||v===0) ? Number(v).toLocaleString("ko-KR") : "—"; }
 
 // ── 카드 렌더 ──
 function cardHTML(e){
-  const m = ETF_META[e.id] || {cat:"kr",tag:"",tc:""};
+  const m = ETF_META[e.id] || {cat:"kr_idx"};
   const isOpen = openCards.has(e.id);
   const statusClass = e.fetch_ok ? "ok" : (e.price ? "pending" : "fail");
   const chgDisplay = e.chg ? (e.chg_dir==="up"?"+":"")+e.chg+"%" : "—";
 
-  const h = holdings[e.id] || {qty:0, avg:0};
   const price = parseFloat(e.price) || 0;
-  const value = h.qty * price;
-  const cost = h.qty * (h.avg || 0);
+  const qty = e.qty || 0;
+  const avg = e.avg_price || 0;
+  const value = qty * price;
+  const cost = qty * avg;
   const pnl = value - cost;
   const pnlPct = cost > 0 ? (pnl/cost*100) : 0;
+  const monthlyDist = (e.myield && price) ? Math.round(qty * price * e.myield / 100) : 0;
 
   return `
 <div class="etf-card ${statusClass}" id="card-${e.id}">
   <div class="card-head" onclick="toggleCard('${e.id}')">
     <div style="min-width:0">
       <div class="card-name">${e.name}</div>
-      <div class="card-meta">${e.code} · ${e.dist||""}배당${h.qty>0?` · <span style="color:var(--accent)">${h.qty}주 보유</span>`:""}</div>
+      <div class="card-meta">${e.code} · ${qty.toLocaleString("ko-KR")}주 보유</div>
     </div>
-    <span class="tag ${m.tc}">${m.tag}</span>
+    <span class="tag tag-${m.cat}">${CAT_LABELS[m.cat]||""}</span>
   </div>
   <div class="metrics">
     <div class="metric">
@@ -268,61 +202,85 @@ function cardHTML(e){
       <div class="metric-val" style="font-size:11px">${e.price ? fmt(e.price)+"원" : "—"}</div>
     </div>
     <div class="metric">
-      <div class="metric-label">주간 등락</div>
+      <div class="metric-label">등락</div>
       <div class="metric-val ${chgClass(e.chg, e.chg_dir)}">${chgDisplay}</div>
     </div>
     <div class="metric">
-      <div class="metric-label">분배금(추정)</div>
-      <div class="metric-val" style="font-size:11px">${e.dist_est ? "~"+fmt(e.dist_est)+"원" : "—"}</div>
+      <div class="metric-label">평가금액</div>
+      <div class="metric-val" style="font-size:11px">${fmt(Math.round(value))}원</div>
     </div>
     <div class="metric">
-      <div class="metric-label">PER${perSignal(e.per)}</div>
-      <div class="metric-val ${perClass(e.per)}">${fmtX(e.per)}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">PBR${pbrSignal(e.pbr)}</div>
-      <div class="metric-val ${pbrClass(e.pbr)}">${fmtX(e.pbr)}</div>
+      <div class="metric-label">평가손익</div>
+      <div class="metric-val ${pnl>=0?'pos':'neg'}" style="font-size:11px">${pnl>=0?'+':''}${pnlPct.toFixed(1)}%</div>
     </div>
   </div>
   <div class="card-detail ${isOpen?"open":""}">
+    <div class="detail-row"><span class="detail-label">보유수량</span><span class="detail-val">${qty.toLocaleString("ko-KR")}주</span></div>
+    <div class="detail-row"><span class="detail-label">평균매입가</span><span class="detail-val">${fmt(avg)}원</span></div>
+    <div class="detail-row"><span class="detail-label">평가손익</span><span class="detail-val ${pnl>=0?'pos':'neg'}">${pnl>=0?'+':''}${fmt(Math.round(pnl))}원 (${pnl>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
+    <div class="detail-row"><span class="detail-label">월배당율</span><span class="detail-val">${e.myield ? e.myield+"%" : "—"}</span></div>
+    <div class="detail-row"><span class="detail-label">이번달 예상 분배금</span><span class="detail-val">${monthlyDist ? fmt(monthlyDist)+"원" : "—"}</span></div>
     <div class="detail-row"><span class="detail-label">NAV</span><span class="detail-val">${fmt(e.nav)}원</span></div>
     <div class="detail-row"><span class="detail-label">순자산(AUM)</span><span class="detail-val">${fmt(e.aum)}억원</span></div>
-    <div class="detail-row"><span class="detail-label">배당수익률(연)</span><span class="detail-val">${e.div_yield ? e.div_yield+"%" : "—"}</span></div>
     <div class="detail-row"><span class="detail-label">52주 최고</span><span class="detail-val">${fmt(e.w52_high)}원</span></div>
     <div class="detail-row"><span class="detail-label">52주 최저</span><span class="detail-val">${fmt(e.w52_low)}원</span></div>
     ${trendHTML(e.id)}
     <div class="detail-row"><span class="detail-label">마지막 갱신</span><span class="detail-val">${e.updated||"—"}</span></div>
-    <div class="detail-row" style="border:none;padding-top:10px;flex-direction:column;align-items:stretch;gap:6px">
-      <div class="holding-label">💼 내 보유정보</div>
-      <div class="holding-row">
-        <div class="holding-field">
-          <div class="holding-label">보유수량</div>
-          <input class="holding-input" type="number" min="0" step="1" placeholder="0" value="${h.qty||''}" onclick="event.stopPropagation()" onchange="updateHolding('${e.id}','qty',this.value)">
-        </div>
-        <div class="holding-field">
-          <div class="holding-label">평균매입가(원)</div>
-          <input class="holding-input" type="number" min="0" step="1" placeholder="0" value="${h.avg||''}" onclick="event.stopPropagation()" onchange="updateHolding('${e.id}','avg',this.value)">
-        </div>
-      </div>
-    </div>
-    ${h.qty>0 ? `
-    <div class="detail-row"><span class="detail-label">평가금액</span><span class="detail-val">${fmt(Math.round(value))}원</span></div>
-    <div class="detail-row"><span class="detail-label">평가손익</span><span class="detail-val ${pnl>=0?'pos':'neg'}">${pnl>=0?'+':''}${fmt(Math.round(pnl))}원 (${pnl>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
-    ` : ``}
   </div>
 </div>`;
 }
 
-// ── 요약 ──
+// ── 최상단 히어로 요약 (보유금액 · 전일대비 · 이번달 분배금) ──
+function renderHero(){
+  const etfs = allData.etfs || [];
+  let totalValue=0, totalCost=0, totalDayChange=0, totalMonthlyDist=0;
+
+  etfs.forEach(e=>{
+    const price = parseFloat(e.price) || 0;
+    const qty = e.qty || 0;
+    const value = qty * price;
+    totalValue += value;
+    totalCost += qty * (e.avg_price || 0);
+    const chgPct = parseFloat(e.chg) || 0;
+    const signedPct = e.chg_dir==="up" ? chgPct : e.chg_dir==="dn" ? -chgPct : 0;
+    totalDayChange += value * signedPct / 100;
+    if(e.myield && price) totalMonthlyDist += qty * price * e.myield / 100;
+  });
+
+  const prevValue = totalValue - totalDayChange;
+  const dayPct = prevValue>0 ? (totalDayChange/prevValue*100) : 0;
+  const chgCls = totalDayChange>=0 ? "pos" : "neg";
+  const chgSign = totalDayChange>=0 ? "▲" : "▼";
+
+  document.getElementById("hero").innerHTML = `
+<div class="hero">
+  <div class="hero-row">
+    <div>
+      <div class="hero-label">현재 보유금액</div>
+      <div class="hero-val">${fmt(Math.round(totalValue))}원</div>
+    </div>
+    <div>
+      <div class="hero-chg ${chgCls}">${chgSign} ${fmt(Math.abs(Math.round(totalDayChange)))}원</div>
+      <div class="hero-chg-sub ${chgCls}">(${totalDayChange>=0?'+':''}${dayPct.toFixed(2)}% 전일대비)</div>
+    </div>
+  </div>
+  <div class="hero-div">
+    <span class="hero-div-label">💰 이번달 예상 분배금</span>
+    <span class="hero-div-val">${fmt(Math.round(totalMonthlyDist))}원</span>
+  </div>
+</div>`;
+}
+
+// ── 카테고리 요약 ──
 function summaryHTML(etfs){
   const up = etfs.filter(e=>e.chg_dir==="up").length;
   const dn = etfs.filter(e=>e.chg_dir==="dn").length;
   const ok = etfs.filter(e=>e.fetch_ok).length;
-  const monthly = etfs.filter(e=>e.dist_type==="월"||e.dist==="월").length;
+  const value = etfs.reduce((s,e)=> s + (e.qty||0)*(parseFloat(e.price)||0), 0);
   return `
 <div class="summary">
   <div class="sum-card">
-    <div class="sum-label">모니터링</div>
+    <div class="sum-label">보유종목</div>
     <div class="sum-val" style="color:var(--accent)">${etfs.length}</div>
     <div class="sum-sub">수집성공 ${ok}개</div>
   </div>
@@ -332,58 +290,9 @@ function summaryHTML(etfs){
     <div class="sum-sub">보합 ${etfs.length-up-dn}개</div>
   </div>
   <div class="sum-card">
-    <div class="sum-label">마지막 갱신</div>
-    <div class="sum-val" style="font-size:13px;color:var(--success)">${allData.updated ? allData.updated.slice(5,16) : "—"}</div>
-    <div class="sum-sub">평일 16:00 자동</div>
-  </div>
-</div>`;
-}
-
-// ── 내 포트폴리오 전체 요약 (탭과 무관하게 항상 전체 보유종목 기준) ──
-function portfolioSummaryHTML(){
-  let totalValue=0, totalCost=0, totalDayChange=0, count=0;
-
-  (allData.etfs||[]).forEach(e=>{
-    const h = holdings[e.id];
-    if(!h || !h.qty) return;
-    count++;
-    const price = parseFloat(e.price) || 0;
-    const value = h.qty * price;
-    const cost = h.qty * (h.avg || 0);
-    totalValue += value;
-    totalCost += cost;
-    const chgPct = parseFloat(e.chg) || 0;
-    const signedPct = e.chg_dir==="up" ? chgPct : e.chg_dir==="dn" ? -chgPct : 0;
-    totalDayChange += value * signedPct / 100;
-  });
-
-  if(count===0){
-    return `<div class="section-title">💼 내 포트폴리오</div>
-    <div class="portfolio-summary"><div class="sum-card" style="grid-column:1/-1">
-      <div class="sum-sub">각 종목 카드를 눌러 보유수량과 평균매입가를 입력하면 여기에 총 평가금액과 손익이 표시됩니다.</div>
-    </div></div>`;
-  }
-
-  const totalPnl = totalValue - totalCost;
-  const totalPnlPct = totalCost>0 ? (totalPnl/totalCost*100) : 0;
-  const prevValue = totalValue - totalDayChange;
-  const dayPct = prevValue>0 ? (totalDayChange/prevValue*100) : 0;
-
-  return `<div class="section-title">💼 내 포트폴리오 (${count}종목)</div>
-<div class="portfolio-summary">
-  <div class="sum-card">
-    <div class="sum-label">총 평가금액</div>
-    <div class="sum-val" style="font-size:16px">${fmt(Math.round(totalValue))}원</div>
-    <div class="sum-sub">매입원가 ${fmt(Math.round(totalCost))}원</div>
-  </div>
-  <div class="sum-card">
-    <div class="sum-label">평가손익</div>
-    <div class="sum-val ${totalPnl>=0?'pos':'neg'}" style="font-size:16px">${totalPnl>=0?'+':''}${fmt(Math.round(totalPnl))}원</div>
-    <div class="sum-sub ${totalPnl>=0?'pos':'neg'}">${totalPnl>=0?'+':''}${totalPnlPct.toFixed(2)}%</div>
-  </div>
-  <div class="sum-card" style="grid-column:1/-1">
-    <div class="sum-label">오늘 변동</div>
-    <div class="sum-val ${totalDayChange>=0?'pos':'neg'}" style="font-size:16px">${totalDayChange>=0?'+':''}${fmt(Math.round(totalDayChange))}원 (${totalDayChange>=0?'+':''}${dayPct.toFixed(2)}%)</div>
+    <div class="sum-label">구간 평가금액</div>
+    <div class="sum-val" style="font-size:13px;color:var(--success)">${fmt(Math.round(value))}원</div>
+    <div class="sum-sub">평일 16:00 자동갱신</div>
   </div>
 </div>`;
 }
@@ -396,10 +305,10 @@ function renderTab(){
 
   const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>(ETF_META[e.id]||{}).cat===activeTab);
 
-  let html = portfolioSummaryHTML() + summaryHTML(etfs);
+  let html = summaryHTML(etfs);
 
   if(activeTab==="all"){
-    ["kr","us","div","cc","re"].forEach(cat=>{
+    ["kr_idx","kr_div","us_idx","us_div"].forEach(cat=>{
       const group = etfs.filter(e=>(ETF_META[e.id]||{}).cat===cat);
       if(!group.length) return;
       html += `<div class="section-title">${CAT_LABELS[cat]}</div><div class="etf-list">${group.map(cardHTML).join("")}</div>`;
@@ -409,6 +318,7 @@ function renderTab(){
   }
 
   document.getElementById("app-content").innerHTML = html;
+  renderHero();
 }
 
 function switchTab(id){ activeTab=id; renderTab(); }
@@ -421,12 +331,10 @@ async function loadData(){
   document.getElementById("error-banner").style.display = "none";
 
   try {
-    // data/etf_data.json 을 GitHub Pages에서 가져옴
     const res = await fetch("data/etf_data.json?t="+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     allData = await res.json();
 
-    // 누적 히스토리(있으면 로드, 없어도 무시)
     try {
       const hres = await fetch("data/history.json?t="+Date.now());
       if(hres.ok) allHistory = await hres.json();
@@ -434,31 +342,8 @@ async function loadData(){
 
     renderTab();
   } catch(e) {
-    // 개발 중이거나 파일 없을 때 — 빈 데이터로 표시
     console.warn("데이터 로드 실패:", e.message);
-    allData = {
-      updated: "—",
-      etfs: [
-        {id:"e01",code:"314250",name:"KODEX 미국빅테크10(H)",   dist:"월",   fetch_ok:false},
-        {id:"e02",code:"396500",name:"TIGER 반도체TOP10",        dist:"분기", fetch_ok:false},
-        {id:"e03",code:"0173Y0",name:"KODEX 미국AI광통신네트워크",dist:"월",  fetch_ok:false},
-        {id:"e04",code:"458730",name:"TIGER 미국배당다우존스",    dist:"월",   fetch_ok:false},
-        {id:"e05",code:"441640",name:"KODEX 미국배당커버드콜액티브",dist:"월",fetch_ok:false},
-        {id:"e06",code:"476800",name:"KODEX 한국부동산리츠인프라",dist:"월",  fetch_ok:false},
-        {id:"e07",code:"494300",name:"KODEX 나스닥100데일리커버드콜OTM",dist:"월",fetch_ok:false},
-        {id:"e08",code:"498410",name:"KODEX 금융고배당TOP10위클리커버드콜",dist:"주간",fetch_ok:false},
-        {id:"e09",code:"0167A0",name:"SOL AI반도체TOP2플러스",   dist:"분기", fetch_ok:false},
-        {id:"e10",code:"0190C0",name:"RISE 현대차고정피지컬AI",  dist:"분기", fetch_ok:false},
-        {id:"e11",code:"489030",name:"PLUS 고배당주위클리커버드콜",dist:"주간",fetch_ok:false},
-        {id:"e12",code:"0080G0",name:"KODEX 방산TOP10",          dist:"분기", fetch_ok:false},
-        {id:"e14",code:"0115D0",name:"KODEX 조선TOP10",           dist:"분기", fetch_ok:false},
-        {id:"e15",code:"305720",name:"KODEX 2차전지산업",          dist:"분기", fetch_ok:false},
-        {id:"e16",code:"483280",name:"KODEX 미국AI테크TOP10타겟커버드콜",dist:"월",fetch_ok:false},
-        {id:"e17",code:"069500",name:"KODEX 200",                 dist:"분기", fetch_ok:false},
-        {id:"e18",code:"0219E0",name:"KODEX 200커버드콜액티브",     dist:"월",  fetch_ok:false},
-        {id:"e19",code:"498400",name:"KODEX 200타겟위클리커버드콜", dist:"월",  fetch_ok:false},
-      ]
-    };
+    allData = { updated: "—", etfs: [] };
     const banner = document.getElementById("error-banner");
     banner.style.display = "block";
     banner.textContent = "⚠ 데이터 파일을 찾을 수 없습니다. GitHub Actions를 먼저 실행해 주세요.";
@@ -466,7 +351,6 @@ async function loadData(){
   }
 }
 
-// 앱 초기화
 loadData();
 </script>
 </body>
