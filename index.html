@@ -112,6 +112,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
     <h1>📊 ETF 모니터</h1>
     <button class="refresh-btn" onclick="loadData()">↻ 새로고침</button>
   </div>
+  <div id="live-badge" class="updated"></div>
 </div>
 
 <div id="hero"></div>
@@ -225,6 +226,11 @@ function cardHTML(e){
 
 // ── 최상단 히어로 요약 (보유금액 · 전일대비 · 이번달 분배금) ──
 function renderHero(){
+  const badge = document.getElementById("live-badge");
+  if(badge){
+    badge.textContent = `⏱ ${allData.updated||"—"} 기준 (평일 10·12·14·16시 자동갱신)`;
+  }
+
   const etfs = allData.etfs || [];
   let totalValue=0, totalCost=0, totalDayChange=0, totalMonthlyDist=0;
 
