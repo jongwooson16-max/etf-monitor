@@ -39,6 +39,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'N
 .hero { margin: 12px 14px 4px; background: linear-gradient(135deg, #232849, #1a1d33); border: 1px solid var(--border); border-radius: 14px; padding: 14px 14px 12px; }
 .hero-title { font-size: 11px; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
 .hero-metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.hero-metrics-2 { grid-template-columns: repeat(2, 1fr); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
 .hero-metric { text-align: center; }
 .hero-metric-label { font-size: 9px; color: var(--muted); margin-bottom: 4px; white-space: nowrap; }
 .hero-metric-val { font-size: 13px; font-weight: 700; }
@@ -259,6 +260,13 @@ function renderHero(){
   const chgCls = totalDayChange>=0 ? "pos" : "neg";
   const chgSign = totalDayChange>=0 ? "▲" : "▼";
 
+  // 누적 분배금: 현재 월배당율 기준으로 올해 1월~8월(8회) 동일하게 받았다고 가정
+  const DIST_MONTHS = 8;
+  const cumDist = totalMonthlyDist * DIST_MONTHS;
+  const finalPnl = totalPnl + cumDist;
+  const finalPnlPct = totalCost>0 ? (finalPnl/totalCost*100) : 0;
+  const finalCls = finalPnl>=0 ? "pos" : "neg";
+
   document.getElementById("hero").innerHTML = `
 <div class="hero">
   <div class="hero-title">💼 내 포트폴리오 합계</div>
@@ -283,6 +291,17 @@ function renderHero(){
       <div class="hero-metric-label">전일대비</div>
       <div class="hero-metric-val ${chgCls}">${chgSign}${fmt(Math.abs(Math.round(totalDayChange)))}원</div>
       <div class="hero-metric-sub ${chgCls}">(${totalDayChange>=0?'+':''}${dayPct.toFixed(2)}%)</div>
+    </div>
+  </div>
+  <div class="hero-metrics hero-metrics-2">
+    <div class="hero-metric">
+      <div class="hero-metric-label">누적분배금(${DIST_MONTHS}개월 가정)</div>
+      <div class="hero-metric-val" style="color:var(--warning)">${fmt(Math.round(cumDist))}원</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-label">최종손익 (평가손익+분배금)</div>
+      <div class="hero-metric-val ${finalCls}">${finalPnl>=0?'+':''}${fmt(Math.round(finalPnl))}원</div>
+      <div class="hero-metric-sub ${finalCls}">(${finalPnl>=0?'+':''}${finalPnlPct.toFixed(2)}%)</div>
     </div>
   </div>
   <div class="hero-div">
