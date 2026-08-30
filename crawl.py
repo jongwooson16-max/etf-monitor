@@ -17,26 +17,25 @@ from urllib.error import URLError
 # ── 보유 ETF 목록 (계좌 합산 완료) ────────────────────────────
 # cat: kr_idx(한국지수) / kr_div(한국배당) / us_idx(미국지수) / us_div(미국배당)
 ETF_LIST = [
-    {"id": "e01", "code": "069500", "name": "KODEX 200",                              "cat": "kr_idx", "qty": 210,  "avg_price": 84243, "myield": 0.0},
-    {"id": "e02", "code": "396500", "name": "TIGER 반도체TOP10",                       "cat": "kr_idx", "qty": 580,  "avg_price": 43078, "myield": 0.0},
+    {"id": "e01", "code": "069500", "name": "KODEX 200",                              "cat": "kr_idx", "qty": 211,  "avg_price": 84354, "myield": 0.0},
+    {"id": "e02", "code": "396500", "name": "TIGER 반도체TOP10",                       "cat": "kr_idx", "qty": 587,  "avg_price": 48533, "myield": 0.0},
     {"id": "e03", "code": "0167A0", "name": "SOL AI반도체TOP2플러스",                   "cat": "kr_idx", "qty": 294,  "avg_price": 26695, "myield": 0.0},
     {"id": "e04", "code": "229200", "name": "KODEX 코스닥150",                          "cat": "kr_idx", "qty": 240,  "avg_price": 19587, "myield": 0.0},
-    {"id": "e05", "code": "0190C0", "name": "RISE 현대차고정피지컬AI",                  "cat": "kr_idx", "qty": 293,  "avg_price": 12555, "myield": 0.0},
 
-    {"id": "e06", "code": "476800", "name": "KODEX 한국부동산리츠인프라",               "cat": "kr_div", "qty": 1488, "avg_price": 4436,  "myield": 0.72},
-    {"id": "e07", "code": "498400", "name": "KODEX 200타겟위클리커버드콜",              "cat": "kr_div", "qty": 2627, "avg_price": 21688, "myield": 1.14},
-    {"id": "e08", "code": "498410", "name": "KODEX 금융고배당TOP10타겟위클리커버드콜", "cat": "kr_div", "qty": 2258, "avg_price": 12848, "myield": 1.26},
-    {"id": "e09", "code": "0219E0", "name": "KODEX 200커버드콜액티브",                  "cat": "kr_div", "qty": 140,  "avg_price": 8960,  "myield": 0.0},
+    {"id": "e06", "code": "476800", "name": "KODEX 한국부동산리츠인프라",               "cat": "kr_div", "qty": 1499, "avg_price": 4435,  "myield": 0.72},
+    {"id": "e07", "code": "498400", "name": "KODEX 200타겟위클리커버드콜",              "cat": "kr_div", "qty": 2771, "avg_price": 21627, "myield": 1.14},
+    {"id": "e08", "code": "498410", "name": "KODEX 금융고배당TOP10타겟위클리커버드콜", "cat": "kr_div", "qty": 2287, "avg_price": 12491, "myield": 1.26},
+    {"id": "e09", "code": "0219E0", "name": "KODEX 200커버드콜액티브",                  "cat": "kr_div", "qty": 1076, "avg_price": 8546,  "myield": 0.0},
 
-    {"id": "e10", "code": "0173Y0", "name": "KODEX 미국AI광통신네트워크",              "cat": "us_idx", "qty": 8,    "avg_price": 14969, "myield": 0.0},
-    {"id": "e11", "code": "314250", "name": "KODEX 미국빅테크10(H)",                   "cat": "us_idx", "qty": 158,  "avg_price": 60620, "myield": 0.0},
-    {"id": "e12", "code": "360750", "name": "TIGER 미국S&P500",                        "cat": "us_idx", "qty": 493,  "avg_price": 25712, "myield": 0.0},
+    {"id": "e11", "code": "314250", "name": "KODEX 미국빅테크10(H)",                   "cat": "us_idx", "qty": 151,  "avg_price": 40229, "myield": 0.0},
+    {"id": "e12", "code": "360750", "name": "TIGER 미국S&P500",                        "cat": "us_idx", "qty": 247,  "avg_price": 25712, "myield": 0.0},
 
-    {"id": "e13", "code": "441640", "name": "KODEX 미국배당커버드콜액티브",             "cat": "us_div", "qty": 2149, "avg_price": 13203, "myield": 0.73},
-    {"id": "e14", "code": "458730", "name": "TIGER 미국배당다우존스",                  "cat": "us_div", "qty": 1273, "avg_price": 15055, "myield": 0.23},
-    {"id": "e15", "code": "494300", "name": "KODEX 미국나스닥100데일리커버드콜OTM",    "cat": "us_div", "qty": 4952, "avg_price": 10532, "myield": 1.66},
-    {"id": "e16", "code": "481060", "name": "KODEX 미국30년국채타겟커버드콜(합성H)",   "cat": "us_div", "qty": 540,  "avg_price": 7560,  "myield": 1.1},
-    {"id": "e17", "code": "483280", "name": "KODEX 미국AI테크TOP10타겟커버드콜",       "cat": "us_div", "qty": 383,  "avg_price": 12825, "myield": 1.2},
+    {"id": "e13", "code": "441640", "name": "KODEX 미국배당커버드콜액티브",             "cat": "us_div", "qty": 3720, "avg_price": 12802, "myield": 0.73},
+    {"id": "e14", "code": "458730", "name": "TIGER 미국배당다우존스",                  "cat": "us_div", "qty": 637,  "avg_price": 15055, "myield": 0.23},
+    {"id": "e15", "code": "494300", "name": "KODEX 미국나스닥100데일리커버드콜OTM",    "cat": "us_div", "qty": 4054, "avg_price": 10220, "myield": 1.66},
+    {"id": "e16", "code": "481060", "name": "KODEX 미국30년국채타겟커버드콜(합성H)",   "cat": "us_div", "qty": 552,  "avg_price": 7170,  "myield": 1.1},
+    {"id": "e17", "code": "483280", "name": "KODEX 미국AI테크TOP10타겟커버드콜",       "cat": "us_div", "qty": 387,  "avg_price": 10163, "myield": 1.2},
+    # e05(RISE 현대차고정피지컬AI), e10(KODEX 미국AI광통신네트워크)는 전량 매도되어 목록에서 제외
 ]
 
 # ── 네이버금융 크롤링 ──────────────────────────────────────────
