@@ -1,15 +1,15 @@
 {
-  "updated": "2026-08-28 21:38 KST",
-  "total": 17,
-  "success": 17,
+  "updated": "2026-08-30 16:32 KST",
+  "total": 15,
+  "success": 15,
   "etfs": [
     {
       "id": "e01",
       "code": "069500",
       "name": "KODEX 200",
       "cat": "kr_idx",
-      "qty": 210,
-      "avg_price": 84243,
+      "qty": 211,
+      "avg_price": 84354,
       "myield": 0.0,
       "price": "107180",
       "chg": "-1.79",
@@ -20,7 +20,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -28,8 +28,8 @@
       "code": "396500",
       "name": "TIGER 반도체TOP10",
       "cat": "kr_idx",
-      "qty": 580,
-      "avg_price": 43078,
+      "qty": 587,
+      "avg_price": 48533,
       "myield": 0.0,
       "price": "34900",
       "chg": "-2.53",
@@ -40,7 +40,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -60,7 +60,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -80,27 +80,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
-      "fetch_ok": true
-    },
-    {
-      "id": "e05",
-      "code": "0190C0",
-      "name": "RISE 현대차고정피지컬AI",
-      "cat": "kr_idx",
-      "qty": 293,
-      "avg_price": 12555,
-      "myield": 0.0,
-      "price": "8385",
-      "chg": "0.48",
-      "chg_dir": "up",
-      "nav": "8393.0",
-      "aum": "5065",
-      "w52_high": "",
-      "w52_low": "",
-      "per": "",
-      "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -108,8 +88,8 @@
       "code": "476800",
       "name": "KODEX 한국부동산리츠인프라",
       "cat": "kr_div",
-      "qty": 1488,
-      "avg_price": 4436,
+      "qty": 1499,
+      "avg_price": 4435,
       "myield": 0.72,
       "price": "4245",
       "chg": "0.59",
@@ -120,7 +100,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -128,8 +108,8 @@
       "code": "498400",
       "name": "KODEX 200타겟위클리커버드콜",
       "cat": "kr_div",
-      "qty": 2627,
-      "avg_price": 21688,
+      "qty": 2771,
+      "avg_price": 21627,
       "myield": 1.14,
       "price": "20350",
       "chg": "-1.55",
@@ -140,7 +120,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -148,8 +128,8 @@
       "code": "498410",
       "name": "KODEX 금융고배당TOP10타겟위클리커버드콜",
       "cat": "kr_div",
-      "qty": 2258,
-      "avg_price": 12848,
+      "qty": 2287,
+      "avg_price": 12491,
       "myield": 1.26,
       "price": "11870",
       "chg": "1.15",
@@ -160,7 +140,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -168,8 +148,8 @@
       "code": "0219E0",
       "name": "KODEX 200커버드콜액티브",
       "cat": "kr_div",
-      "qty": 140,
-      "avg_price": 8960,
+      "qty": 1076,
+      "avg_price": 8546,
       "myield": 0.0,
       "price": "8290",
       "chg": "-2.18",
@@ -180,27 +160,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
-      "fetch_ok": true
-    },
-    {
-      "id": "e10",
-      "code": "0173Y0",
-      "name": "KODEX 미국AI광통신네트워크",
-      "cat": "us_idx",
-      "qty": 8,
-      "avg_price": 14969,
-      "myield": 0.0,
-      "price": "11100",
-      "chg": "-4.8",
-      "chg_dir": "dn",
-      "nav": "11371.0",
-      "aum": "3941",
-      "w52_high": "",
-      "w52_low": "",
-      "per": "",
-      "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -208,8 +168,8 @@
       "code": "314250",
       "name": "KODEX 미국빅테크10(H)",
       "cat": "us_idx",
-      "qty": 158,
-      "avg_price": 60620,
+      "qty": 151,
+      "avg_price": 40229,
       "myield": 0.0,
       "price": "62490",
       "chg": "1.05",
@@ -220,7 +180,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -228,7 +188,7 @@
       "code": "360750",
       "name": "TIGER 미국S&P500",
       "cat": "us_idx",
-      "qty": 493,
+      "qty": 247,
       "avg_price": 25712,
       "myield": 0.0,
       "price": "26280",
@@ -240,7 +200,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -248,8 +208,8 @@
       "code": "441640",
       "name": "KODEX 미국배당커버드콜액티브",
       "cat": "us_div",
-      "qty": 2149,
-      "avg_price": 13203,
+      "qty": 3720,
+      "avg_price": 12802,
       "myield": 0.73,
       "price": "12695",
       "chg": "-0.78",
@@ -260,7 +220,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -268,7 +228,7 @@
       "code": "458730",
       "name": "TIGER 미국배당다우존스",
       "cat": "us_div",
-      "qty": 1273,
+      "qty": 637,
       "avg_price": 15055,
       "myield": 0.23,
       "price": "15140",
@@ -280,7 +240,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -288,8 +248,8 @@
       "code": "494300",
       "name": "KODEX 미국나스닥100데일리커버드콜OTM",
       "cat": "us_div",
-      "qty": 4952,
-      "avg_price": 10532,
+      "qty": 4054,
+      "avg_price": 10220,
       "myield": 1.66,
       "price": "8990",
       "chg": "-0.11",
@@ -300,7 +260,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -308,8 +268,8 @@
       "code": "481060",
       "name": "KODEX 미국30년국채타겟커버드콜(합성H)",
       "cat": "us_div",
-      "qty": 540,
-      "avg_price": 7560,
+      "qty": 552,
+      "avg_price": 7170,
       "myield": 1.1,
       "price": "7470",
       "chg": "-0.07",
@@ -320,7 +280,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     },
     {
@@ -328,8 +288,8 @@
       "code": "483280",
       "name": "KODEX 미국AI테크TOP10타겟커버드콜",
       "cat": "us_div",
-      "qty": 383,
-      "avg_price": 12825,
+      "qty": 387,
+      "avg_price": 10163,
       "myield": 1.2,
       "price": "11535",
       "chg": "0.3",
@@ -340,7 +300,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-08-28 21:38 KST",
+      "updated": "2026-08-30 16:32 KST",
       "fetch_ok": true
     }
   ]
