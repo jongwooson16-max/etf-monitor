@@ -152,6 +152,47 @@ def update_history(results: list, date_str: str) -> None:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
+# ── 분배금 누적 (매월 20일에 1회만 그 시점 예상 분배금을 실제로 적립) ──
+DIVIDEND_LOG_PATH = "data/dividend_log.json"
+DIVIDEND_CREDIT_DAY = 20  # 이 날짜 이후 첫 실행에서 그 달 몫을 적립
+
+
+def update_dividend_log(results: list, today) -> dict:
+    """
+    종목별 누적 분배금(per_id)을 관리.
+    - 매달 DIVIDEND_CREDIT_DAY(20일) 이후 첫 실행에서, 그 시점 (수량×현재가×월배당율%)을
+      해당 종목의 누적치에 1회만 더한다 (같은 달에 여러 번 돌아도 중복 적립되지 않음).
+    - 20일이 주말/공휴일이라 그날 실행이 없어도, 그달 안에서 처음 실행될 때 적립되므로 누락 없음.
+    반환값: {id: 누적분배금} — 이번 실행에서 적립 여부와 무관하게 항상 최신 누적치를 반환.
+    """
+    try:
+        with open(DIVIDEND_LOG_PATH, "r", encoding="utf-8") as f:
+            log = json.load(f)
+    except FileNotFoundError:
+        log = {"credited_months": [], "per_id": {}}
+
+    credited_months = log.setdefault("credited_months", [])
+    per_id = log.setdefault("per_id", {})
+
+    month_key = today.strftime("%Y-%m")
+    if today.day >= DIVIDEND_CREDIT_DAY and month_key not in credited_months:
+        credited_amounts = []
+        for e in results:
+            qty = e.get("qty", 0)
+            myield = e.get("myield", 0)
+            price = float(e.get("price") or 0)
+            if qty and myield and price:
+                amt = round(qty * price * myield / 100)
+                per_id[e["id"]] = per_id.get(e["id"], 0) + amt
+                credited_amounts.append((e["id"], amt))
+        credited_months.append(month_key)
+        print(f"  💰 {month_key} 분배금 적립 완료: {len(credited_amounts)}개 종목")
+        with open(DIVIDEND_LOG_PATH, "w", encoding="utf-8") as f:
+            json.dump(log, f, ensure_ascii=False, indent=2)
+
+    return per_id
+
+
 # ── 메인 ──────────────────────────────────────────────────────
 def main():
     kst = timezone(timedelta(hours=9))
@@ -233,6 +274,11 @@ def main():
     import os
     os.makedirs("data", exist_ok=True)
 
+    # 분배금 누적 적립 (매월 20일 1회) — 각 종목에 cum_dist(누적분배금) 필드로 반영
+    per_id_dist = update_dividend_log(results, datetime.now(kst))
+    for e in results:
+        e["cum_dist"] = per_id_dist.get(e["id"], 0)
+
     output = {
         "updated": now_str,
         "total": len(results),
@@ -248,7 +294,7 @@ def main():
 
     print(f"\n{'='*50}")
     print(f"완료: {output['success']}/{output['total']}개 수집 성공")
-    print(f"저장: data/etf_data.json, {HISTORY_PATH}")
+    print(f"저장: data/etf_data.json, {HISTORY_PATH}, {DIVIDEND_LOG_PATH}")
     print(f"{'='*50}\n")
 
 
