@@ -1,0 +1,40 @@
+name: ETF 뉴스 브리핑 (카카오톡 전송)
+
+on:
+  schedule:
+    # 매일 KST 08:00 (평일만) = UTC 전날 23:00
+    - cron: "0 23 * * 0-4"
+  workflow_dispatch: {}   # Actions 탭에서 수동 실행 버튼용
+
+permissions:
+  contents: write   # 리프레시 토큰이 갱신됐을 때 Secrets를 업데이트하기 위해 필요
+
+jobs:
+  send-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 뉴스 수집 + 카카오톡 전송
+        id: run_bot
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+        run: python news_bot.py
+
+      - name: (선택) 갱신된 리프레시 토큰을 Secrets에 자동 반영
+        if: steps.run_bot.outputs.new_refresh_token != ''
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          NEW_REFRESH_TOKEN: ${{ steps.run_bot.outputs.new_refresh_token }}
+        run: |
+          pip install pynacl requests --quiet
+          python update_kakao_secret.py
