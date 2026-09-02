@@ -220,6 +220,7 @@ function cardHTML(e){
     <div class="detail-row"><span class="detail-label">평가손익</span><span class="detail-val ${pnl>=0?'pos':'neg'}">${pnl>=0?'+':''}${fmt(Math.round(pnl))}원 (${pnl>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
     <div class="detail-row"><span class="detail-label">월배당율</span><span class="detail-val">${e.myield ? e.myield+"%" : "—"}</span></div>
     <div class="detail-row"><span class="detail-label">이번달 예상 분배금</span><span class="detail-val">${monthlyDist ? fmt(monthlyDist)+"원" : "—"}</span></div>
+    <div class="detail-row"><span class="detail-label">누적분배금</span><span class="detail-val" style="color:var(--warning)">${fmt(e.cum_dist||0)}원</span></div>
     <div class="detail-row"><span class="detail-label">NAV</span><span class="detail-val">${fmt(e.nav)}원</span></div>
     <div class="detail-row"><span class="detail-label">순자산(AUM)</span><span class="detail-val">${fmt(e.aum)}억원</span></div>
     <div class="detail-row"><span class="detail-label">52주 최고</span><span class="detail-val">${fmt(e.w52_high)}원</span></div>
@@ -230,15 +231,9 @@ function cardHTML(e){
 </div>`;
 }
 
-// ── 최상단 히어로 요약 (기초금액 · 평가액 · 평가손익 · 전일대비 · 분배금, 종목카드와 동일한 형태) ──
-function renderHero(){
-  const badge = document.getElementById("live-badge");
-  if(badge){
-    badge.textContent = `⏱ ${allData.updated||"—"} 기준 (평일 10·14·18시 자동갱신)`;
-  }
-
-  const etfs = allData.etfs || [];
-  let totalValue=0, totalCost=0, totalDayChange=0, totalMonthlyDist=0;
+// ── 재사용 가능한 포트폴리오 요약 블록 (전체 히어로 + 카테고리별 요약에서 공용) ──
+function portfolioBlockHTML(etfs, title){
+  let totalValue=0, totalCost=0, totalDayChange=0, totalMonthlyDist=0, cumDist=0;
 
   etfs.forEach(e=>{
     const price = parseFloat(e.price) || 0;
@@ -250,6 +245,7 @@ function renderHero(){
     const signedPct = e.chg_dir==="up" ? chgPct : e.chg_dir==="dn" ? -chgPct : 0;
     totalDayChange += value * signedPct / 100;
     if(e.myield && price) totalMonthlyDist += qty * price * e.myield / 100;
+    cumDist += e.cum_dist || 0;   // 매월 20일에 실제 적립된 누적분배금 (crawl.py가 계산)
   });
 
   const totalPnl = totalValue - totalCost;
@@ -260,16 +256,13 @@ function renderHero(){
   const chgCls = totalDayChange>=0 ? "pos" : "neg";
   const chgSign = totalDayChange>=0 ? "▲" : "▼";
 
-  // 누적 분배금: 현재 월배당율 기준으로 올해 1월~8월(8회) 동일하게 받았다고 가정
-  const DIST_MONTHS = 8;
-  const cumDist = totalMonthlyDist * DIST_MONTHS;
   const finalPnl = totalPnl + cumDist;
   const finalPnlPct = totalCost>0 ? (finalPnl/totalCost*100) : 0;
   const finalCls = finalPnl>=0 ? "pos" : "neg";
 
-  document.getElementById("hero").innerHTML = `
+  return `
 <div class="hero">
-  <div class="hero-title">💼 내 포트폴리오 합계</div>
+  <div class="hero-title">${title}</div>
   <div class="hero-metrics">
     <div class="hero-metric">
       <div class="hero-metric-label">기초금액</div>
@@ -295,7 +288,7 @@ function renderHero(){
   </div>
   <div class="hero-metrics hero-metrics-2">
     <div class="hero-metric">
-      <div class="hero-metric-label">누적분배금(${DIST_MONTHS}개월 가정)</div>
+      <div class="hero-metric-label">누적분배금</div>
       <div class="hero-metric-val" style="color:var(--warning)">${fmt(Math.round(cumDist))}원</div>
     </div>
     <div class="hero-metric">
@@ -309,6 +302,15 @@ function renderHero(){
     <span class="hero-div-val">${fmt(Math.round(totalMonthlyDist))}원</span>
   </div>
 </div>`;
+}
+
+// ── 최상단 히어로 요약 (전체 보유종목 기준) ──
+function renderHero(){
+  const badge = document.getElementById("live-badge");
+  if(badge){
+    badge.textContent = `⏱ ${allData.updated||"—"} 기준 (평일 10·14·18시 자동갱신 · 분배금은 매월 20일 적립)`;
+  }
+  document.getElementById("hero").innerHTML = portfolioBlockHTML(allData.etfs || [], "💼 내 포트폴리오 합계");
 }
 
 // ── 카테고리 요약 ──
@@ -345,7 +347,9 @@ function renderTab(){
 
   const etfs = activeTab==="all" ? allData.etfs : allData.etfs.filter(e=>e.cat===activeTab);
 
-  let html = summaryHTML(etfs);
+  let html = activeTab==="all"
+    ? summaryHTML(etfs)
+    : portfolioBlockHTML(etfs, `💼 ${CAT_LABELS[activeTab]} 합계`) + summaryHTML(etfs);
 
   if(activeTab==="all"){
     ["kr_idx","kr_div","us_idx","us_div"].forEach(cat=>{
