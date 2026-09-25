@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25 14:46 KST",
+  "updated": "2026-09-25 17:40 KST",
   "total": 15,
   "success": 15,
   "etfs": [
@@ -20,7 +20,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -29,8 +29,8 @@
       "code": "396500",
       "name": "TIGER 반도체TOP10",
       "cat": "kr_idx",
-      "qty": 587,
-      "avg_price": 48533,
+      "qty": 580,
+      "avg_price": 43078,
       "myield": 0.0,
       "price": "39395",
       "chg": "2.63",
@@ -41,7 +41,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -62,7 +62,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -83,7 +83,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -92,8 +92,8 @@
       "code": "476800",
       "name": "KODEX 한국부동산리츠인프라",
       "cat": "kr_div",
-      "qty": 1499,
-      "avg_price": 4435,
+      "qty": 1703,
+      "avg_price": 4404,
       "myield": 0.72,
       "price": "4215",
       "chg": "0.12",
@@ -104,7 +104,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 412285
     },
@@ -125,7 +125,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 5833457
     },
@@ -134,8 +134,8 @@
       "code": "498410",
       "name": "KODEX 금융고배당TOP10타겟위클리커버드콜",
       "cat": "kr_div",
-      "qty": 2287,
-      "avg_price": 12491,
+      "qty": 2326,
+      "avg_price": 12476,
       "myield": 1.26,
       "price": "11755",
       "chg": "-0.63",
@@ -146,7 +146,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 3095782
     },
@@ -155,8 +155,8 @@
       "code": "0219E0",
       "name": "KODEX 200커버드콜액티브",
       "cat": "kr_div",
-      "qty": 1076,
-      "avg_price": 8546,
+      "qty": 1572,
+      "avg_price": 8430,
       "myield": 0.0,
       "price": "8725",
       "chg": "1.28",
@@ -167,7 +167,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -188,7 +188,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -209,7 +209,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -230,7 +230,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 3082070
     },
@@ -251,7 +251,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 198609
     },
@@ -260,8 +260,8 @@
       "code": "494300",
       "name": "KODEX 미국나스닥100데일리커버드콜OTM",
       "cat": "us_div",
-      "qty": 4054,
-      "avg_price": 10220,
+      "qty": 3704,
+      "avg_price": 10196,
       "myield": 1.66,
       "price": "9065",
       "chg": "0.5",
@@ -272,7 +272,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 5422408
     },
@@ -293,7 +293,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 404893
     },
@@ -314,7 +314,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-25 14:46 KST",
+      "updated": "2026-09-25 17:40 KST",
       "fetch_ok": true,
       "cum_dist": 483649
     }
