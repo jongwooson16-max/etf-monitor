@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-29 15:33 KST",
+  "updated": "2026-09-30 00:20 KST",
   "total": 15,
   "success": 15,
   "etfs": [
@@ -20,7 +20,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -41,7 +41,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -62,7 +62,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -83,7 +83,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -104,7 +104,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 412285
     },
@@ -125,7 +125,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 5833457
     },
@@ -146,7 +146,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 3095782
     },
@@ -167,7 +167,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -188,7 +188,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -203,13 +203,13 @@
       "price": "25855",
       "chg": "-0.96",
       "chg_dir": "dn",
-      "nav": "25872.0",
+      "nav": "25893.0",
       "aum": "207435",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 0
     },
@@ -230,7 +230,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 3082070
     },
@@ -245,13 +245,13 @@
       "price": "14225",
       "chg": "-1.25",
       "chg_dir": "dn",
-      "nav": "14223.0",
+      "nav": "14235.0",
       "aum": "42305",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 198609
     },
@@ -266,13 +266,13 @@
       "price": "8775",
       "chg": "-1.18",
       "chg_dir": "dn",
-      "nav": "8786.0",
+      "nav": "8793.0",
       "aum": "10416",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 5422408
     },
@@ -293,7 +293,7 @@
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 404893
     },
@@ -308,13 +308,13 @@
       "price": "11665",
       "chg": "-0.77",
       "chg_dir": "dn",
-      "nav": "11684.0",
+      "nav": "11694.0",
       "aum": "4596",
       "w52_high": "",
       "w52_low": "",
       "per": "",
       "pbr": "",
-      "updated": "2026-09-29 15:33 KST",
+      "updated": "2026-09-30 00:20 KST",
       "fetch_ok": true,
       "cum_dist": 483649
     }
